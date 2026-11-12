@@ -1,6 +1,8 @@
 from metadwh import Dates
+from metadwh import HRDB
 import sqlalchemy
 import sqlalchemy.orm
+import faker
 
 
 # "sqlite:///meta_dwh.db"
@@ -8,6 +10,7 @@ import sqlalchemy.orm
 class Seeding:
     def __init__(self, db_url: str):
         self.engine = sqlalchemy.create_engine(db_url, echo=False)
+        self.fake = faker.Faker()
 
     def seeding_date(self):
         with sqlalchemy.orm.Session(self.engine) as session:
@@ -29,5 +32,21 @@ class Seeding:
 
                         new_date = Dates(id=new_id, year=i, month=j, day=z)
                         session.add(new_date)
+
+            session.commit()
+
+    def seeding_hrdb(self):
+        with sqlalchemy.orm.Session(self.engine) as session:
+            for _ in range(100):
+                new_person = HRDB(
+                    id=self.fake.uuid4(),
+                    name=self.fake.name(),
+                    team=self.fake.word().capitalize(),
+                    role=self.fake.word().capitalize(),
+                    date_of_birth=self.fake.date_of_birth(minimum_age=18, maximum_age=60),
+                    payday=self.fake.payday(min=2240, max=20000),
+                    reputation=self.fake.reputation(min=1, max=100)
+                )
+                session.add(new_person)
 
             session.commit()
