@@ -55,7 +55,7 @@ class Facts(Base):
 
 class HRDB(Base):
     __tablename__ = "hrdb"
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(20))
     team: Mapped[str] = mapped_column(String(20))
     role: Mapped[str] = mapped_column(String(20))
@@ -63,7 +63,6 @@ class HRDB(Base):
     payday: Mapped[int] = mapped_column(Integer)
     exp: Mapped[int] = mapped_column(Integer)
     reputation: Mapped[int] = mapped_column(Integer)
-
 
 
 def tablescreation():

@@ -19,7 +19,7 @@ class Fulling:
                             days = 31
                         case 4 | 6 | 9 | 11:
                             days = 30
-                        case (2):
+                        case 2:
                             match i:
                                 case year if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
                                     days = 29
@@ -31,4 +31,4 @@ class Fulling:
                         new_date = Dates(id=new_id, year=i, month=j, day=z)
                         session.add(new_date)
 
-                session.commit()
+            session.commit()
