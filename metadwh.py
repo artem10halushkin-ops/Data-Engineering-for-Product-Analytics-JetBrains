@@ -1,15 +1,11 @@
-from tkinter import BaseWidget
 from datetime import date
 import sqlalchemy
 from sqlalchemy import create_engine, Integer
-from typing import List
-from typing import Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
 from sqlalchemy import Date
 import uuid
 
@@ -42,7 +38,7 @@ class Dates(Base):
 
 
 class Facts(Base):
-    __tablename__ = 'daily usage'
+    __tablename__ = 'daily_usage'
     id_person: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, ForeignKey("users.id"), primary_key=True, )
     table_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, ForeignKey("tables.id"), primary_key=True)
     date_id: Mapped[int] = mapped_column(Integer, ForeignKey("dates.id"), primary_key=True)
