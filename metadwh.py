@@ -19,6 +19,7 @@ class Base(DeclarativeBase):
 
 
 class User(Base):
+    __tablename__ = "users"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(20))
     team: Mapped[str] = mapped_column(String(20))
@@ -27,11 +28,13 @@ class User(Base):
 
 
 class Tables(Base):
-    id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True, default=uuid.uuid4())
+    __tablename__ = "tables"
+    id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True, default=uuid.uuid4)
     table_name: Mapped[str] = mapped_column(String(25))
 
 
 class Dates(Base):
+    __tablename__ = 'dates'
     id: Mapped[int] = mapped_column(primary_key=True)
     year: Mapped[int] = mapped_column(Integer)
     month: Mapped[int] = mapped_column(Integer)
@@ -39,9 +42,10 @@ class Dates(Base):
 
 
 class facts(Base):
-    id_person: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True)
-    table_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True)
-    date_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    __tablename__ = 'daily usage'
+    id_person: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, ForeignKey("users.id"), primary_key=True, )
+    table_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, ForeignKey("tables.id"), primary_key=True)
+    date_id: Mapped[int] = mapped_column(Integer, ForeignKey("dates.id"), primary_key=True)
     maxpeakmemory_bytes: Mapped[int] = mapped_column(Integer)
     processed_input_lines: Mapped[int] = mapped_column(Integer)
     bytes_read: Mapped[int] = mapped_column(Integer)
@@ -50,5 +54,6 @@ class facts(Base):
     spilled_bytes: Mapped[int] = mapped_column(Integer)
 
 
-def tablescreation(self):
+def tablescreation():
     engine = create_engine("sqlite://", echo=False)
+    Base.metadata.create_all(engine)
