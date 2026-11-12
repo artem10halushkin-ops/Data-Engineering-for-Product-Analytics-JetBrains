@@ -42,10 +42,12 @@ class Seeding:
                     id=self.fake.uuid4(),
                     name=self.fake.name(),
                     team=self.fake.word().capitalize(),
-                    role=self.fake.word().capitalize(),
+                    role=self.fake.job().capitalize(),
                     date_of_birth=self.fake.date_of_birth(minimum_age=18, maximum_age=60),
-                    payday=self.fake.payday(min=2240, max=20000),
-                    reputation=self.fake.reputation(min=1, max=100)
+                    payday=self.fake.random_int(min=2240, max=20000),
+                    reputation=self.fake.random_int(min=1, max=100),
+                    exp=self.fake.random_element(elements=('Junior', 'Middle', 'Senior'))
+
                 )
                 session.add(new_person)
 
