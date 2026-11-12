@@ -1,4 +1,4 @@
-# Data-Engineering-for-Product-Analytics-JETBRAINS
+# Data-Engineering-for-Product-Analytics-JetBrains
 
 Join our Data Engineering team to work on current challenges in the data warehouse that supports product analytics. You will contribute to making data easier to use, improving reporting performance, and automating data workflows.
 Your project scope will be selected based on the team’s current priorities, your interests, and skills. Possible tasks include:
