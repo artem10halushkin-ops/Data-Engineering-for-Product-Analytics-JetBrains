@@ -39,9 +39,9 @@ class Dates(Base):
 
 
 class facts(Base):
-    id_person: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid)
-    table_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid)
-    date_id: Mapped[int] = mapped_column(Integer)
+    id_person: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True)
+    table_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True)
+    date_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     maxpeakmemory_bytes: Mapped[int] = mapped_column(Integer)
     processed_input_lines: Mapped[int] = mapped_column(Integer)
     bytes_read: Mapped[int] = mapped_column(Integer)
