@@ -41,7 +41,7 @@ class Dates(Base):
     day: Mapped[int] = mapped_column(Integer)
 
 
-class facts(Base):
+class Facts(Base):
     __tablename__ = 'daily usage'
     id_person: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, ForeignKey("users.id"), primary_key=True, )
     table_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, ForeignKey("tables.id"), primary_key=True)
