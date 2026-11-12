@@ -67,5 +67,5 @@ class HRDB(Base):
 
 
 def tablescreation():
-    engine = create_engine("sqlite://", echo=False)
+    engine = create_engine("sqlite:///meta_dwh.db", echo=False)
     Base.metadata.create_all(engine)
