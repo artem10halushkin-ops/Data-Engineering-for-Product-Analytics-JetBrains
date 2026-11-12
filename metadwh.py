@@ -54,7 +54,7 @@ class Facts(Base):
 
 
 class HRDB(Base):
-    __tablename__ = "users"
+    __tablename__ = "hrdb"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(20))
     team: Mapped[str] = mapped_column(String(20))
