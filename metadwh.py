@@ -26,22 +26,22 @@ class User(Base):
     date_of_birth: Mapped[date] = mapped_column(Date)
 
 
-
-
-
 class Tables(Base):
     id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid, primary_key=True, default=uuid.uuid4())
     table_name: Mapped[str] = mapped_column(String(25))
 
-class Dates(Base):
 
+class Dates(Base):
+    id: Mapped[int] = mapped_column(primary_key=True)
     year: Mapped[int] = mapped_column(Integer)
     month: Mapped[int] = mapped_column(Integer)
     day: Mapped[int] = mapped_column(Integer)
 
+
 class facts(Base):
     id_person: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid)
-    date_id: Mapped # >?>???
+    table_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.Uuid)
+    date_id: Mapped[int] = mapped_column(Integer)
     maxpeakmemory_bytes: Mapped[int] = mapped_column(Integer)
     processed_input_lines: Mapped[int] = mapped_column(Integer)
     bytes_read: Mapped[int] = mapped_column(Integer)
