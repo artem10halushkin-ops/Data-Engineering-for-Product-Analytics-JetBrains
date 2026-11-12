@@ -50,6 +50,22 @@ class Facts(Base):
     spilled_bytes: Mapped[int] = mapped_column(Integer)
 
 
+# Assumption that we have another db with the personal data from hr department
+
+
+class HRDB(Base):
+    __tablename__ = "users"
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20))
+    team: Mapped[str] = mapped_column(String(20))
+    role: Mapped[str] = mapped_column(String(20))
+    date_of_birth: Mapped[date] = mapped_column(Date)
+    payday: Mapped[int] = mapped_column(Integer)
+    exp: Mapped[int] = mapped_column(Integer)
+    reputation: Mapped[int] = mapped_column(Integer)
+
+
+
 def tablescreation():
     engine = create_engine("sqlite://", echo=False)
     Base.metadata.create_all(engine)
