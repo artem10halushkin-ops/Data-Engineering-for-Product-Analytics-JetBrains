@@ -110,12 +110,14 @@ class MetaETLPipeline:
     def load(self, dbs: dict):
         with sqlalchemy.orm.Session(self.engine) as session:
             if dbs.get("users"):
-                session.execute(sqlalchemy.insert(User), dbs["users"])
+                session.execute(sqlalchemy.insert(User).prefix_with("OR IGNORE"), dbs["users"])
 
             if dbs.get("tables"):
-                session.execute(sqlalchemy.insert(Tables), dbs["tables"])
+                session.execute(sqlalchemy.insert(Tables).prefix_with("OR IGNORE"), dbs["tables"])
 
             if dbs.get("daily_usage"):
+                date_id = dbs["daily_usage"][0]["date_id"]
+                session.execute(sqlalchemy.delete(Facts).where(Facts.date_id == date_id))
                 session.execute(sqlalchemy.insert(Facts), dbs["daily_usage"])
 
             session.commit()
