@@ -1,5 +1,6 @@
 import sqlalchemy
 import uuid
+import datetime
 
 
 # str = "sqlite:///meta_dwh.db"
@@ -25,7 +26,8 @@ class MetaETLPipeline:
             dates_db = [dict(row) for row in conn.execute(date_query).mappings().all()]
 
         with self.trino_engine.connect() as trino_conn:
-            trino_result = trino_conn.execute(iceberg_query, {"target_date": target_date}).mappings().all()
+            trino_result = [dict(row) for row in
+                            trino_conn.execute(iceberg_query, {"target_date": target_date}).mappings().all()]
 
         return {
             "hrdb": hr_db,
@@ -37,7 +39,8 @@ class MetaETLPipeline:
         facts_for_load = []
         tables_for_load = []
         tables_cache = {}
-        date_to_int = int(target_date.replace(",", "").replace("-", ""))
+        # date_to_int = int(target_date.replace(",", "").replace("-", "").replace(":", ""))
+        date_to_int = int(datetime.date.fromisoformat(target_date).strftime("%Y%m%d"))
 
         hrdb_raw = dbs.get("hrdb", [])
         iceberg = dbs.get("iceberg", [])
