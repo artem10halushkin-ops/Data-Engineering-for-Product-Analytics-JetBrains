@@ -12,10 +12,18 @@ class MetaETLPipeline:
 
     def extraction(self) -> list[dict]:
         hrdb_query = sqlalchemy.text("SELECT id, name , team , role, date_of_birth FROM hrdb")
-        date_query = sqlalchemy("SELECT id, year, month , day ")
+        date_query = sqlalchemy.text("SELECT id, year, month , day ")
+
+        with open("queries.sql") as f:
+            iceberg_query = sqlalchemy.text(f.read())
 
         with self.engine.connect() as conn:
-            conn.execute()
+            hr_db = conn.execute(hrdb_query)
+            dates_db = conn.execute(date_query)
+
+
+
+
 
     def transformation(self):
         pass
