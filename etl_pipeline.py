@@ -11,9 +11,11 @@ class MetaETLPipeline:
         self.trino_user = trino_user
 
     def extraction(self) -> list[dict]:
-        with self.engine.connect() as conn:
-            pass
+        hrdb_query = sqlalchemy.text("SELECT id, name , team , role, date_of_birth FROM hrdb")
+        date_query = sqlalchemy("SELECT id, year, month , day ")
 
+        with self.engine.connect() as conn:
+            conn.execute()
 
     def transformation(self):
         pass
