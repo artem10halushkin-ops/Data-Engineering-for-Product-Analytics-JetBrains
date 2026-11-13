@@ -92,12 +92,12 @@ class MetaETLPipeline:
 
             else:
                 agg = aggregated_facts[key]
-                aggregated_facts["maxpeakmemory_bytes"] = max(agg["maxpeakmemory_bytes"], log["maxpeakmemory_bytes"])
-                aggregated_facts["processed_input_lines"] += log["processed_input_lines"]
-                aggregated_facts["bytes_read"] += log["bytes_read"]
-                aggregated_facts["queued_time"] += log["queued_time"]
-                aggregated_facts["whole_time_query"] += log["whole_time_query"]
-                aggregated_facts["spilled_bytes"] += log["spilled_bytes"]
+                agg["maxpeakmemory_bytes"] = max(agg["maxpeakmemory_bytes"], log["maxpeakmemory_bytes"])
+                agg["processed_input_lines"] += log["processed_input_lines"]
+                agg["bytes_read"] += log["bytes_read"]
+                agg["queued_time"] += log["queued_time"]
+                agg["whole_time_query"] += log["whole_time_query"]
+                agg["spilled_bytes"] += log["spilled_bytes"]
 
         facts_for_load = list(aggregated_facts.values())
 
