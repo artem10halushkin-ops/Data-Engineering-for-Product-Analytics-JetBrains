@@ -9,12 +9,12 @@ class MetaETLPipeline:
         self.trino_host = trino_host
         self.trino_port = trino_port
         self.trino_user = trino_user
-        trino_url = f"trino::/{self.trino_user}@{self.trino_host}:{trino_port}/{trino_catalog}"
+        trino_url = f"trino://{self.trino_user}@{self.trino_host}:{trino_port}/{trino_catalog}"
         self.trino_engine = sqlalchemy.create_engine(trino_url, echo=False)
 
     def extraction(self, target_date: str) -> dict:
         hrdb_query = sqlalchemy.text("SELECT id, name , team , role, date_of_birth FROM hrdb")
-        date_query = sqlalchemy.text("SELECT id, year, month , day ")
+        date_query = sqlalchemy.text("SELECT id, year, month , day  FROM dates")
 
         with open("queries.sql", "r", encoding="utf-8") as f:
             iceberg_query = sqlalchemy.text(f.read())
@@ -29,7 +29,7 @@ class MetaETLPipeline:
         return {
             "hrdb": hr_db,
             "dates": dates_db,
-            "iceber": trino_result
+            "iceberg": trino_result
         }
 
     def transformation(self):
