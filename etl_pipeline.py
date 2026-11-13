@@ -102,4 +102,7 @@ class MetaETLPipeline:
             session.commit()
 
     def etl(self, target_date: str):
-        pass
+        data_extracted = self.extraction(target_date)
+        data_transformed = self.transformation(target_date, data_extracted)
+        self.load(data_transformed)
+        print("loaded")
