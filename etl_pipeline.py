@@ -1,4 +1,5 @@
 import sqlalchemy
+import uuid
 
 
 # str = "sqlite:///meta_dwh.db"
@@ -32,8 +33,34 @@ class MetaETLPipeline:
             "iceberg": trino_result
         }
 
-    def transformation(self):
-        pass
+    def transformation(self, dbs: dict):
+        hrdb_raw = dbs.get("hrdb", [])
+        dates = dbs.get("dates")
+        iceberg = dbs.get("iceberg", [])
+
+        user_for_load = []
+        for user in hrdb_raw:
+            user_for_load.append({
+                "id": user["id"],
+                "name": user["name"],
+                "team": user["team"],
+                "role": user["role"],
+                "date_of_birth": user["date_of_birth"],
+            })
+
+        tables_for_load = []
+        tables_cache = {}
+        for log in iceberg:
+            t_name = log["table_name"]
+            if t_name not in tables_cache:
+                new_uuid = uuid.uuid4()
+                tables_for_load.append(
+                    {
+                        "id": new_uuid,
+                        "table_name": t_name
+                    }
+
+                )
 
     def load(self):
         pass
