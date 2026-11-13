@@ -16,7 +16,7 @@ class MetaETLPipeline:
         hrdb_query = sqlalchemy.text("SELECT id, name , team , role, date_of_birth FROM hrdb")
         date_query = sqlalchemy.text("SELECT id, year, month , day  FROM dates")
 
-        with open("queries.sql", "r", encoding="utf-8") as f:
+        with open("extract_trino.sql", "r", encoding="utf-8") as f:
             iceberg_query = sqlalchemy.text(f.read())
 
         with self.engine.connect() as conn:
