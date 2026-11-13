@@ -33,9 +33,13 @@ class MetaETLPipeline:
             "iceberg": trino_result
         }
 
-    def transformation(self, dbs: dict):
+    def transformation(self, target_date: str, dbs: dict):
+        facts_for_load = []
+        tables_for_load = []
+        tables_cache = {}
+        date_to_int = int(target_date.replace(",", ""))
+
         hrdb_raw = dbs.get("hrdb", [])
-        dates = dbs.get("dates")
         iceberg = dbs.get("iceberg", [])
 
         user_for_load = []
@@ -48,19 +52,36 @@ class MetaETLPipeline:
                 "date_of_birth": user["date_of_birth"],
             })
 
-        tables_for_load = []
-        tables_cache = {}
         for log in iceberg:
             t_name = log["table_name"]
             if t_name not in tables_cache:
                 new_uuid = uuid.uuid4()
+
+                tables_cache[t_name] = new_uuid
                 tables_for_load.append(
                     {
                         "id": new_uuid,
                         "table_name": t_name
                     }
-
                 )
+
+        for log in iceberg:
+            facts_for_load.append({
+                "person_id": log["person_id"],
+                "table_id": tables_cache[log["table_name"]],
+                "date_id": date_to_int,
+                "maxpeakmemory_bytes": log["maxpeakmemory_bytes"],
+                "processed_input_lines": log["processed_input_lines"],
+                "bytes_read": log["bytes_read"],
+                "queued_time": log["queued_time"],
+                "whole_time_query": log["whole_time_query"],
+                "spilled_bytes": log["spilled_bytes"],
+            })
+        return {
+            "users": user_for_load,
+            "tables": tables_for_load,
+            "daily_usage": facts_for_load
+        }
 
     def load(self):
         pass
