@@ -94,7 +94,7 @@ class MetaETLPipeline:
                 session.execute(sqlalchemy.insert(User), dbs["users"])
 
             if dbs.get("tables"):
-                session.execute(sqlalchemy.insert(Tables), dbs["tables_for_load"])
+                session.execute(sqlalchemy.insert(Tables), dbs["tables"])
 
             if dbs.get("daily_usage"):
                 session.execute(sqlalchemy.insert(Facts), dbs["daily_usage"])
