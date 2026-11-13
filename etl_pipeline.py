@@ -41,7 +41,7 @@ class MetaETLPipeline:
         facts_for_load = []
         tables_for_load = []
         tables_cache = {}
-        # date_to_int = int(target_date.replace(",", "").replace("-", "").replace(":", ""))
+
         date_to_int = int(datetime.date.fromisoformat(target_date).strftime("%Y%m%d"))
 
         hrdb_raw = dbs.get("hrdb", [])
@@ -70,18 +70,37 @@ class MetaETLPipeline:
                     }
                 )
 
+        aggregated_facts = {}
+
         for log in iceberg:
-            facts_for_load.append({
-                "person_id": log["person_id"],
-                "table_id": tables_cache[log["table_name"]],
-                "date_id": date_to_int,
-                "maxpeakmemory_bytes": log["maxpeakmemory_bytes"],
-                "processed_input_lines": log["processed_input_lines"],
-                "bytes_read": log["bytes_read"],
-                "queued_time": log["queued_time"],
-                "whole_time_query": log["whole_time_query"],
-                "spilled_bytes": log["spilled_bytes"],
-            })
+            pers_id = log["person_id"],
+            t_id = tables_cache[log["table_name"]]
+            key = (pers_id, t_id, date_to_int)
+
+            if (key not in aggregated_facts):
+                aggregated_facts[key] = {
+                    "person_id": pers_id,
+                    "table_id": t_id,
+                    "date_id": date_to_int,
+                    "maxpeakmemory_bytes": log["maxpeakmemory_bytes"],
+                    "processed_input_lines": log["processed_input_lines"],
+                    "bytes_read": log["bytes_read"],
+                    "queued_time": log["queued_time"],
+                    "whole_time_query": log["whole_time_query"],
+                    "spilled_bytes": log["spilled_bytes"],
+                }
+
+            else:
+                agg = aggregated_facts[key]
+                aggregated_facts["maxpeakmemory_bytes"] = max(agg["maxpeakmemory_bytes"], log["maxpeakmemory_bytes"]),
+                aggregated_facts["processed_input_lines"] += log["processed_input_lines"],
+                aggregated_facts["bytes_read"] += log["bytes_read"],
+                aggregated_facts["queued_time"] += log["queued_time"],
+                aggregated_facts["whole_time_query"] += log["whole_time_query"],
+                aggregated_facts["spilled_bytes"] += log["spilled_bytes"],
+
+        facts_for_load = list[aggregated_facts]
+
         return {
             "users": user_for_load,
             "tables": tables_for_load,
