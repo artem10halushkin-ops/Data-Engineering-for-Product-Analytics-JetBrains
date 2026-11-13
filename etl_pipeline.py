@@ -1,6 +1,8 @@
 import sqlalchemy
+import sqlalchemy.orm
 import uuid
 import datetime
+from metadwh import User, Tables, Facts
 
 
 # str = "sqlite:///meta_dwh.db"
@@ -86,8 +88,18 @@ class MetaETLPipeline:
             "daily_usage": facts_for_load
         }
 
-    def load(self):
-        pass
+    def load(self, dbs: dict):
+        with sqlalchemy.orm.Session(self.engine) as session:
+            if dbs.get("users"):
+                session.execute(sqlalchemy.insert(User), dbs["users"])
 
-    def etl(self):
+            if dbs.get("tables"):
+                session.execute(sqlalchemy.insert(Tables), dbs["tables_for_load"])
+
+            if dbs.get("daily_usage"):
+                session.execute(sqlalchemy.insert(Facts), dbs["daily_usage"])
+
+            session.commit()
+
+    def etl(self, target_date: str):
         pass
