@@ -73,11 +73,11 @@ class MetaETLPipeline:
         aggregated_facts = {}
 
         for log in iceberg:
-            pers_id = log["person_id"],
+            pers_id = log["person_id"]
             t_id = tables_cache[log["table_name"]]
             key = (pers_id, t_id, date_to_int)
 
-            if (key not in aggregated_facts):
+            if key not in aggregated_facts:
                 aggregated_facts[key] = {
                     "person_id": pers_id,
                     "table_id": t_id,
@@ -92,14 +92,14 @@ class MetaETLPipeline:
 
             else:
                 agg = aggregated_facts[key]
-                aggregated_facts["maxpeakmemory_bytes"] = max(agg["maxpeakmemory_bytes"], log["maxpeakmemory_bytes"]),
-                aggregated_facts["processed_input_lines"] += log["processed_input_lines"],
-                aggregated_facts["bytes_read"] += log["bytes_read"],
-                aggregated_facts["queued_time"] += log["queued_time"],
-                aggregated_facts["whole_time_query"] += log["whole_time_query"],
-                aggregated_facts["spilled_bytes"] += log["spilled_bytes"],
+                aggregated_facts["maxpeakmemory_bytes"] = max(agg["maxpeakmemory_bytes"], log["maxpeakmemory_bytes"])
+                aggregated_facts["processed_input_lines"] += log["processed_input_lines"]
+                aggregated_facts["bytes_read"] += log["bytes_read"]
+                aggregated_facts["queued_time"] += log["queued_time"]
+                aggregated_facts["whole_time_query"] += log["whole_time_query"]
+                aggregated_facts["spilled_bytes"] += log["spilled_bytes"]
 
-        facts_for_load = list[aggregated_facts]
+        facts_for_load = list(aggregated_facts.values())
 
         return {
             "users": user_for_load,
