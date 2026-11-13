@@ -37,7 +37,7 @@ class MetaETLPipeline:
         facts_for_load = []
         tables_for_load = []
         tables_cache = {}
-        date_to_int = int(target_date.replace(",", ""))
+        date_to_int = int(target_date.replace(",", "").replace("-", ""))
 
         hrdb_raw = dbs.get("hrdb", [])
         iceberg = dbs.get("iceberg", [])
