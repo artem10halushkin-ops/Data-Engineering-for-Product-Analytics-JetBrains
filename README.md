@@ -1,26 +1,24 @@
 # Data-Engineering-for-Product-Analytics-JetBrains
 
-metadwh.py
-contains the structure for our star schema tables. 
-Table Facts assemlbes all the information about the technical usage of the queries by the particular user and the infomration regarding this event. 
+### `metadwh.py`
+Contains the structure for our star schema tables:
+* **`Facts`** — assembles all the information about the technical usage of queries by a particular user, along with metadata regarding the event.
+* **`User`** — contains important information about each user. For the sake of a single source of truth, this information is not embedded directly in `Facts`, but stored in dimension tables like `User`.
+* **`Dates`** — stores dates in `YYYY-MM-DD` format. Its ID is distinct and formed by a simple arithmetic operation (for example: `2026-01-01` -> `20260101`).
+* **`Tables`** — stores distinguishable database tables accordingly.
+* **`HRDB`** — simulates an existing database containing personnel information, from which we retrieve attributes like the `Team name` in our analytical queries.
 
-Table User contains the import informations about some user. For sake of single source of truth we store such information not in the Facts embeeded, but in other tables like User.
+### `seed.py`
+Represents the class for seeding the created tables: populates `Dates` for 5 years ahead and fills the simulated `HRDB` table with personnel information.
 
-Table 'Dates' stores date in format YYYY-MM-DD. The id of it is distinct and formed buy simple arithmetic operation.
-For Example 2026-01-01 -> 20260101 .
+### `etl_pipeline.py`
+Implements the extraction, transformation, and loading of daily usage statistics into our meta data warehouse:
+* **`extract`** — fetches data from the S3 data lake and the HR database for a given date.
+* **`transform`** — prepares the data according to the schema described in `metadwh.py` for uploading, avoiding the creation of duplicate records.
+* **`load`** — loads the transformed data into the meta DWH.
 
-Table 'Tables' is used for storing distinguishable tables accordingly.
+### `extract_trino.sql`
+Contains the SQL query used for the extraction part of the ETL process.
 
-Table HRDB simulates the database for the information regarding the personla that suppose to exist and from which we take the Team name in one of our task queries for example.
-
-
-seed.py 
-reprents the class for seeding of the created tables Dates for 5 years up on and the the alleged table HR database that has the information about the personal.
-
-etl_pipeline.py
-Has a functionality for the extraction, transformation and loading of the daily usage statistics to our meta data warehouse.
-Method extract takes the data from the s3 datalake 
-
-
-
-queries.sql contains two quiers for the given task that are based on my specific implementaion.
+### `queries.sql`
+Contains two analytical queries for the given task, tailored to this specific schema implementation.
